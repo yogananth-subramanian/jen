@@ -217,10 +217,15 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
+                 net_back=''
                  ir_cli="infrared tripleo-overcloud -vv -o prepare_instack.yml     --version ${release}  --introspect=no     --tagging=no  --tht-roles yes   --deploy=yes "
                  if [ ${deployment} = 'virtual' ]
                  then 
-                  OVER_SETUP="$ir_cli --deployment-files virt "
+                  if [ ${release} = '16.1'  ]
+                    then
+                    net_back=' --network-backend=geneve '
+                  fi
+                  OVER_SETUP="$ir_cli --deployment-files virt $net_back"
                  else
                     if [ ! -z $instack_git ]
                       then
@@ -346,14 +351,19 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
-                 ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate yes --overcloud-stack overcloud --network-ovn no -e @cleanup_services.yml "
+                 net_back='--network-ovn no'
+                 ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate yes --overcloud-stack overcloud -e @cleanup_services.yml "
                  if [ ${deployment} = 'virtual' ]
-                 then 
-                  OVER_SETUP="$ir_cli --deployment-files virt "
+                 then
+                  if [ ${release} = '16.1'  ]
+                    then
+                    net_back=' --network-ovn yes '
+                  fi
+                  OVER_SETUP="$ir_cli --deployment-files virt $net_back "
                  else  
                   a=`basename $temp_git`
                   dep_files=${a%.git}/$temp_path
-                  OVER_SETUP="$ir_cli  --deployment-files $dep_files "
+                  OVER_SETUP="$ir_cli  --deployment-files $dep_files $net_back "
                  fi
                  OC_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${OC_SETUP}

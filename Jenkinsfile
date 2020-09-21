@@ -46,14 +46,14 @@ pipeline {
         string(name: 'build', defaultValue: 'GA', description: 'passed_phase2,passed_phase1,GA')
         string(name: 'beaker_user', defaultValue: 'ysubrama', description: 'Beaker username')
         choice(name: 'deployment', choices: ['virtual', 'hybrid'], description: 'Pick something')
-        string(name: 'instack_git', defaultValue: 'https://github.com/yogananth-subramanian/cluster-mgt.git', description: 'Beaker username')
-        string(name: 'instack_path', defaultValue: 'templates/instack/dell-r640-oss-13-nodes.json', description: 'Beaker username')
-        string(name: 'temp_git', defaultValue: 'https://github.com/yogananth-subramanian/tht-dpdk.git', description: 'Beaker username')
-        string(name: 'temp_path', defaultValue: 'osp16_ref', description: 'Beaker username')
-        string(name: 'under_conf', defaultValue: 'osp16_ref/undercloud_hybrid.conf', description: 'Beaker username')
-        string(name: 'overcloud_script', defaultValue: 'overcloud_deploy_regular.sh', description: 'Beaker username')
+        string(name: 'instack_git', defaultValue: 'https://github.com/yogananth-subramanian/cluster-mgt.git', description: 'git repo hosting instackenv.json file')
+        string(name: 'instack_path', defaultValue: 'templates/instack/dell-r640-oss-13-nodes.json', description: 'path to instackenv.json in above repo')
+        string(name: 'temp_git', defaultValue: 'https://github.com/yogananth-subramanian/tht-dpdk.git', description: 'git repo hosting the THT template')
+        string(name: 'temp_path', defaultValue: 'osp16_ref', description: 'path to THT templates in above repo')
+        string(name: 'under_conf', defaultValue: 'osp16_ref/undercloud_hybrid.conf', description: 'path to undercloud.conf file in above THT template repo')
+        string(name: 'overcloud_script', defaultValue: 'overcloud_deploy_regular.sh', description: 'path to overcloud_script in above THT template repo')
         string(name: 'build_update', defaultValue: 'passed_phase2', description: 'passed_phase2,passed_phase1')
-        string(name: 'exclude', defaultValue: '.*', description: 'Who should I say hello to?')
+        string(name: 'exclude', defaultValue: '.*', description: 'steps to exlude, takes on comma separated values such as baremetal,undercloud,overcloud,update-fix,update-undercloud,update-overcloud')
     }
     stages {
         stage('Install Baremetal') {

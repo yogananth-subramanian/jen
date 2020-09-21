@@ -15,6 +15,10 @@ pipeline {
     }
     stages {
         stage('Example') {
+            environment {
+                password=${params.PASSWORD}
+             
+            }
             steps {
                 echo "Hello ${params.PERSON}"
 
@@ -27,6 +31,7 @@ pipeline {
                 echo "Password: ${params.PASSWORD}"
                 sh '''
                 echo $params.PASSWORD
+                echo $password
                 '''
                 
             }

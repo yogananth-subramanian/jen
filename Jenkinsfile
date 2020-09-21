@@ -31,7 +31,11 @@ pipeline {
                 echo "Password: ${params.PASSWORD}"
                 sh '''
                 echo $mychoice
-                export
+                echo $PERSON
+                echo $BIOGRAPHY
+                echo $TOGGLE
+                echo $CHOICE
+                echo $PASSWORD
                 '''
                 
             }

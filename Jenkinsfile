@@ -65,8 +65,8 @@ pipeline {
                 echo $mychoice
                 echo $PERSON
                 echo $BIOGRAPHY
-                echo $IR_VIRSH_IMAGE
-                echo $IR_NET_CONFIG
+                #echo $IR_VIRSH_IMAGE
+                #echo $IR_NET_CONFIG
                 '''
                 
             }

@@ -45,7 +45,7 @@ pipeline {
         choice(name: 'release', choices: ['16.1', '16', '13'], description: 'Pick something')
         string(name: 'build', defaultValue: 'GA', description: 'passed_phase2,passed_phase1,GA')
         string(name: 'beaker_user', defaultValue: 'ysubrama', description: 'Beaker username')
-        choice(name: 'deploymnet', choices: ['virtual', 'hybrid'], description: 'Pick something')
+        choice(name: 'deployment', choices: ['virtual', 'hybrid'], description: 'Pick something')
         string(name: 'instack_git', defaultValue: 'https://github.com/yogananth-subramanian/cluster-mgt.git', description: 'Beaker username')
         string(name: 'instack_path', defaultValue: 'templates/instack/dell-r640-oss-13-nodes.json', description: 'Beaker username')
         string(name: 'temp_git', defaultValue: 'https://github.com/yogananth-subramanian/tht-dpdk.git', description: 'Beaker username')

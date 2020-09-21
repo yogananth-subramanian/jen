@@ -47,6 +47,8 @@ pipeline {
         stage('Example') {
             environment {
                 mychoice = "${params.CHOICE}"
+                IR_VIRSH_IMAGE = "${IR_VIRSH_IMAGE}"
+                IR_NET_CONFIG = "${IR_NET_CONFIG}"
              
             }
             steps {

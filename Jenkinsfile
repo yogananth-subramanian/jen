@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Example') {
             environment {
-                password=${params.PASSWORD}
+                password="${params.PASSWORD}"
              
             }
             steps {

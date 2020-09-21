@@ -24,8 +24,8 @@ def net_config = [
     'rhos-nfv-10.lab.eng.rdu2.redhat.com': ' --topology-nodes undercloud:1,controller:1 --topology-network 4_nets_3_bridges_hybrid -e override.networks.net1.nic=em4 -e override.networks.net2.nic=em1 -e override.networks.net3.nic=em2',
     'dell-r640-oss-13.lab.eng.brq.redhat.com': ' --topology-nodes undercloud:1,controller:1 --topology-network 4_nets_3_bridges_hybrid -e override.networks.net1.nic=em2 -e override.networks.net2.nic=em3 -e override.networks.net3.nic=em4'
 ]
-def IR_VIRSH_IMAGE = img_list[osp_rhel_list[release]]
-def IR_NET_CONFIG = net_config[server]
+def IR_VIRSH_IMAGE = img_list[osp_rhel_list[params.release]]
+def IR_NET_CONFIG = net_config[params.server]
 pipeline {
     agent any
     parameters {

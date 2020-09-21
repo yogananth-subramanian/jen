@@ -25,6 +25,10 @@ pipeline {
                 echo "Choice: ${params.CHOICE}"
 
                 echo "Password: ${params.PASSWORD}"
+                sh '''
+                echo $params.PASSWORD
+                '''
+                
             }
         }
     }

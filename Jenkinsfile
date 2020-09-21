@@ -29,7 +29,8 @@ def OS_REL = osp_rhel_list[params.release]
 def IR_NET_CONFIG = net_config[params.server]
 def stagelst='baremetal,undercloud,overcloud,update-fix,update-undercloud,update-overcloud'
 def excludelst=[]
-for (i in params.exclude.split(',')){
+def excludestr="${params.exclude}"
+for (i in params.excludestr.split(',')){
   for (j in stagelst.split(',')){
   if ( j.matches(i) ){
     excludelst.add(j)

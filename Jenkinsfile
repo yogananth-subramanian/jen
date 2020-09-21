@@ -109,7 +109,7 @@ pipeline {
                  net_setup=''
                  cntrl_ip=''
                  ir_cli="infrared virsh -vv    --host-address $server  --host-key ~/.ssh/id_rsa     --image-url ${IR_VIRSH_IMAGE}  --host-memory-overcommit False --disk-pool /home/ -e override.controller.cpu=4 -e override.undercloud.cpu=4 "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   IR_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli --topology-nodes 'undercloud:1,controller:1,compute:1'   "
                  else  
@@ -157,7 +157,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="infrared tripleo-undercloud -vv --version ${release}  --build=${build} --images-task=rpm --images-update yes "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli"
                  else
@@ -176,7 +176,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="infrared tripleo-overcloud -vv -o prepare_instack.yml     --version ${release}  --introspect=yes     --tagging=yes     --deploy=no "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   OVER_SETUP="$ir_cli --deployment-files virt "
                  else
@@ -218,7 +218,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="infrared tripleo-overcloud -vv -o prepare_instack.yml     --version ${release}  --introspect=no     --tagging=no  --tht-roles yes   --deploy=yes "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   OVER_SETUP="$ir_cli --deployment-files virt "
                  else
@@ -303,7 +303,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="infrared tripleo-overcloud --ocupdate True  --build ${build_update} --ansible-args='tags=update_collect_info,update_undercloud_validation,update_repos,update_prepare_containers;skip-tags=container-prepare-reboot' --osrelease ${OS_REL} "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   OVER_SETUP="$ir_cli --deployment-files virt "
                  else
@@ -325,7 +325,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="infrared tripleo-upgrade  --upgrade-floatingip-check no  --upgrade-workload yes --overcloud-update yes --overcloud-stack overcloud  "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   OVER_SETUP="$ir_cli --deployment-files virt "
                  else  
@@ -347,7 +347,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate yes --overcloud-stack overcloud --network-ovn no -e @cleanup_services.yml "
-                 if [ $deployment = 'virtual' ]
+                 if [ ${deployment} = 'virtual' ]
                  then 
                   OVER_SETUP="$ir_cli --deployment-files virt "
                  else  

@@ -71,8 +71,8 @@ pipeline {
                         sh '''
                         cd /root/infrared
                         source .venv/bin/activate
-                        #ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'  --release='True'
-                        #ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'
+                        ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'  --release='True'
+                        ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'
                         '''
                     }
                 }
@@ -86,10 +86,10 @@ pipeline {
             steps {
                 echo 'Building'
                 sh '''
-                #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  'yum install -y git python3 libselinux-python3 python-virtualenv libselinux-python'
+                ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  'yum install -y git python3 libselinux-python3 python-virtualenv libselinux-python'
                 keygen='yes|ssh-keygen -t rsa -q -f "$HOME/.ssh/id_rsa" -N ""; cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys '
-                #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} $keygen
-                #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} 'git clone https://github.com/redhat-openstack/infrared.git;cd infrared/;virtualenv .venv;echo "export IR_HOME=`pwd`" >> .venv/bin/activate && source .venv/bin/activate; pip install -U pip;pip install .;infrared plugin add all'
+                ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} $keygen
+                ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} 'git clone https://github.com/redhat-openstack/infrared.git;cd infrared/;virtualenv .venv;echo "export IR_HOME=`pwd`" >> .venv/bin/activate && source .venv/bin/activate; pip install -U pip;pip install .;infrared plugin add all'
                 '''
                 echo 'Finish'
             }
@@ -127,8 +127,8 @@ pipeline {
                     under_ip=${b%.*}
                     if [ ! -z $under_ip ]
                       then
-                      #scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null undercloud.conf root@${server}:/root/infrared/
-                      #scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null overcloud_deploy.sh root@${server}:/root/infrared/
+                      scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null undercloud.conf root@${server}:/root/infrared/
+                      scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null overcloud_deploy.sh root@${server}:/root/infrared/
 
                       cntrl_ip=" -e  override.networks.net1.ip_address=$under_ip.150 "
                     fi
@@ -144,7 +144,7 @@ pipeline {
                   IR_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli ${IR_NET_CONFIG} ${cntrl_ip} ${net_setup}"
                  fi
                  echo ${IR_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${IR_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${IR_SETUP}
                  '''
                 echo 'Finish'
             }
@@ -164,7 +164,7 @@ pipeline {
                   UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli --config-file /root/infrared/undercloud.conf"
                  fi
                  echo ${UN_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
                  '''
             }
         }
@@ -195,18 +195,18 @@ pipeline {
                     if [ -f instack.json  ]
                      then
                      echo "instack"
-                     #scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null instack.json root@${server}:/root/infrared/
+                     scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null instack.json root@${server}:/root/infrared/
                     fi
                     if [ -z $under_subnet ]
                       then
                       under_subnet=br-ctlplane
                     fi
-                  #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} "cd infrared/;git clone $temp_git"
+                  ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server} "cd infrared/;git clone $temp_git"
                   OVER_SETUP="$ir_cli  --deployment-files $dep_files     -e provison_virsh_network_name=br-ctlplane    --hybrid instack.json --vbmc-host undercloud "
                  fi
                  DEP_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${DEP_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${DEP_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${DEP_SETUP}
                  '''
             }
         }
@@ -234,7 +234,7 @@ pipeline {
                       a=`basename $temp_git`
                       dep_files=${a%.git}/$temp_path
                     fi
-                    #scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null overcloud_deploy.sh  root@${server}:/root/infrared/
+                    scp  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null overcloud_deploy.sh  root@${server}:/root/infrared/
                     if [ -z $under_subnet ]
                       then
                       under_subnet=br-ctlplane
@@ -243,7 +243,7 @@ pipeline {
                  fi
                  OC_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${OC_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
                  '''
             }
         }
@@ -257,7 +257,7 @@ pipeline {
                  ir_cli="infrared plugin remove tripleo-upgrade;infrared plugin add --revision stable/train tripleo-upgrade;mkdir -p /root/infrared/plugins/tripleo-upgrade/infrared_plugin/roles/tripleo-upgrade;find /root/infrared/plugins/tripleo-upgrade -maxdepth 1 -mindepth 1 -not -name infrared_plugin -exec mv '{}' /root/infrared/plugins/tripleo-upgrade/infrared_plugin/roles/tripleo-upgrade \\; "
                  UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli"
                  echo ${UN_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
                  '''
             }
         }
@@ -274,7 +274,7 @@ pipeline {
                  ir_cli="infrared tripleo-undercloud --update-undercloud yes --version ${release} --build ${build_update} --ansible-args='tags=upgrade_repos,undercloud_containers'  --osrelease ${OS_REL} "
                  UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli"
                  echo ${UN_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
                  '''
             }
         }
@@ -288,7 +288,7 @@ pipeline {
                  ir_cli="infrared tripleo-upgrade --undercloud-update yes --overcloud-stack overcloud "
                  UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli"
                  echo ${UN_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${UN_SETUP}
                  '''
             }
         }
@@ -313,7 +313,7 @@ pipeline {
                  fi
                  OC_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${OC_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
                  '''
             }
         }
@@ -335,7 +335,7 @@ pipeline {
                  fi
                  OC_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${OC_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
                  '''
             }
         }
@@ -357,7 +357,7 @@ pipeline {
                  fi
                  OC_SETUP="cd infrared/;source .venv/bin/activate;${OVER_SETUP} "
                  echo ${OC_SETUP}
-                 #ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
+                 ssh  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${server}  ${OC_SETUP}
                  '''
             }
         }

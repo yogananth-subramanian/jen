@@ -39,7 +39,12 @@ for (i in excludestr.split(',')){
  }
 }
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'local'
+            customWorkspace "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}"
+        }
+    }
     parameters {
         choice(name: 'server', choices: ['rhos-nfv-10.lab.eng.rdu2.redhat.com', 'dell-r640-oss-13.lab.eng.brq.redhat.com'], description: 'Pick something')
         choice(name: 'release', choices: ['16.1', '16', '13'], description: 'Pick something')
@@ -69,8 +74,7 @@ pipeline {
                   withCredentials([usernamePassword(credentialsId: "${params.beaker_user}", passwordVariable: 'beakerpass', usernameVariable: 'beakerusr')]) {
                       lock("${params.server}") {
                         sh '''
-                        cd /root/infrared
-                        source .venv/bin/activate
+                        git clone https://github.com/redhat-openstack/infrared.git;cd infrared/;virtualenv .venv;echo "export IR_HOME=`pwd`" >> .venv/bin/activate && source .venv/bin/activate; pip install -U pip;pip install .;infrared plugin add all
                         ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'  --release='True'
                         ir beaker --url='https://beaker.engineering.redhat.com' --beaker-user='ysubrama' --beaker-password="$beakerpass" --host-address="$server" --image='rhel-7.8'  --host-pubkey '/root/.ssh/id_rsa.pub' --host-privkey '/root//.ssh/id_rsa' --web-service 'rest' --host-password="$beakerpass"  --host-user='root'
                         '''

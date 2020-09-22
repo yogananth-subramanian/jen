@@ -352,7 +352,7 @@ pipeline {
                 echo 'Testing'
                  sh '''
                  net_back='--network-ovn no'
-                 ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate yes --overcloud-stack overcloud -e @cleanup_services.yml "
+                 ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate no --overcloud-stack overcloud -e @cleanup_services.yml "
                  if [ ${deployment} = 'virtual' ]
                  then
                   if [ ${release} = '16.1'  ]

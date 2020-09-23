@@ -356,13 +356,13 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
-                 net_back='--network-ovn no'
+                 net_back='--network-ovn no --network-ovs yes'
                  ir_cli="echo -e 'cleanup_services: []' > cleanup_services.yml;infrared tripleo-overcloud --postreboot True --postreboot_evacuate no --overcloud-stack overcloud -e @cleanup_services.yml "
                  if [ ${deployment} = 'virtual' ]
                  then
                   if [ ${release} = '16.1'  ]
                     then
-                    net_back=' --network-ovn yes '
+                    net_back=' --network-ovn yes --network-ovs no'
                   fi
                   OVER_SETUP="$ir_cli --deployment-files virt $net_back "
                  else  

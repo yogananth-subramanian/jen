@@ -362,7 +362,7 @@ pipeline {
                  then
                   if [ ${release} = '16.1'  ]
                     then
-                    net_back=' --network-ovn yes --network-ovs no'
+                    net_back=' --network-ovn yes '
                   fi
                   OVER_SETUP="$ir_cli --deployment-files virt $net_back "
                  else  

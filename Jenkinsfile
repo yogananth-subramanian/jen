@@ -222,7 +222,7 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
-                 net_back=' --network-ovn no --network-ovs yes --network-backend vxlan '
+                 net_back=' --network-backend vxlan '
                  ir_cli="infrared tripleo-overcloud -vv -o prepare_instack.yml     --version ${release}  --introspect=no     --tagging=no  --tht-roles yes   --deploy=yes "
                  if [ ${deployment} = 'virtual' ]
                  then 

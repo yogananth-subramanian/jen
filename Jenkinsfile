@@ -180,10 +180,15 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
+                 net_back=' --network-backend vxlan '
                  ir_cli="infrared tripleo-overcloud -vv -o prepare_instack.yml     --version ${release}  --introspect=yes     --tagging=yes     --deploy=no "
                  if [ ${deployment} = 'virtual' ]
-                 then 
-                  OVER_SETUP="$ir_cli --deployment-files virt "
+                 then
+                    if [ ${release} = '16.1'  ]
+                    then
+                    net_back=' --network-backend=geneve '
+                  fi
+                  OVER_SETUP="$ir_cli --deployment-files virt $net_back"
                  else
                     if [ ! -z $instack_git ]
                       then

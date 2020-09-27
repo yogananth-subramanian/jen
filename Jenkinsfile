@@ -162,7 +162,7 @@ pipeline {
             steps {
                 echo 'Testing'
                  sh '''
-                 ir_cli="infrared tripleo-undercloud -vv --version ${release}  --build=${build} --images-task=rpm --images-update yes "
+                 ir_cli="infrared tripleo-undercloud -vv --version ${release}  --build=${build} --images-task=rpm --images-update no "
                  if [ ${deployment} = 'virtual' ]
                  then 
                   UN_SETUP="cd infrared/;source .venv/bin/activate;$ir_cli"

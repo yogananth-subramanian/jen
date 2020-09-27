@@ -10,10 +10,11 @@ def img_list = [
     '7.5':'http://download.devel.redhat.com/rhel-7/rel-eng/RHEL-7/RHEL-7.5-RC-1.3/compose/Server/x86_64/images/rhel-guest-image-7.5-146.x86_64.qcow2',
     '7.4':'http://download.devel.redhat.com/rhel-7/rel-eng/RHEL-7/RHEL-7.4-RC-1.2/compose/Server/x86_64/images/rhel-guest-image-7.4-191.x86_64.qcow2',
     '7.3':'http://download.devel.redhat.com/pub/rhel/released/RHEL-7/7.3/Server/x86_64/images/rhel-guest-image-7.3-33.x86_64.qcow2',
+    '7.66':'http://rhos-qe-mirror-qeos.usersys.redhat.com/brewroot/packages/rhel-guest-image/7.6/555/images/rhel-guest-image-7.6-555.x86_64.qcow2'
 ]
 def osp_rhel_list = [
     '10': '7.7',
-    '13': '7.7',
+    '13': '7.66',
     '14': '7.7',
     '15': '8.2',
     '16': '8.1',
